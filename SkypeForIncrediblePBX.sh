@@ -8,8 +8,8 @@
 # lead to an error message similar to "Cannot contact server" ( the exact message varies 
 # depending on the version that was used ). 
 
-# Install the latest Skype client
-# NOTE: DYNAMIC client recommended therefore root access is necessary to install it and its required libraries.
+# Install the latest Skype dynamic client
+# NOTE: DYNAMIC client recommended therefore requires root access to install skype and system libraries.
 install_skype_client()
 {
   cd /tmp
@@ -33,6 +33,109 @@ install_prereq_debian()
   apt-get install xvfb
   apt-get install libasound2 libasound2-plugins alsa alsa-utils alsa-oss alsa-tools
   apt-get install pulseaudio pulseaudio-utils
+}
+
+install_prereq_debian_7_skypopen()
+{
+# Dependencies for building mod_skypopen:
+ apt-get install libx11-dev libx11-dev libxau-dev libxcb1-dev libxdmcp-dev \
+ x11proto-core-dev x11proto-input-dev x11proto-kb-dev xtrans-dev
+
+ # Infrastructure needed to run skype client:
+ apt-get install xvfb pulseaudio
+
+ # Dependencies of skype client:
+ # Enable i386 libraries installing
+ dpkg --add-architecture i386
+ apt-get update
+ # Install libraries
+ apt-get install \
+ fontconfig fontconfig-config gcc-4.7-base:i386 libasound2:i386 \
+ libasound2-plugins:i386 libasyncns0:i386 libattr1:i386 libaudio2:i386 \
+ libavahi-client3:i386 libavahi-common-data:i386 libavahi-common3:i386 \
+ libavcodec53:i386 libavutil51:i386 libc6:i386 libc6-i686:i386 libcap2:i386 \
+ libcomerr2:i386 libcups2:i386 libdbus-1-3:i386 libdirac-encoder0:i386 \
+ libexpat1:i386 libffi5:i386 libflac8:i386 libfontconfig1 libfontconfig1:i386 \
+ libfreetype6:i386 libgcc1:i386 libgcrypt11:i386 libglib2.0-0:i386 \
+ libgnutls26:i386 libgpg-error0:i386 libgsm1:i386 libgssapi-krb5-2:i386 \
+ libgstreamer-plugins-base0.10-0:i386 libgstreamer0.10-0:i386 libice6:i386 \
+ libjack-jackd2-0:i386 libjbig0:i386 libjpeg8:i386 libjson0:i386 \
+ libk5crypto3:i386 libkeyutils1:i386 libkrb5-3:i386 libkrb5support0:i386 \
+ liblcms1:i386 liblzma5:i386 libmng1:i386 libmp3lame0:i386 libogg0:i386 \
+ libopenjpeg2:i386 liborc-0.4-0:i386 libp11-kit0:i386 libpcre3:i386 \
+ libpng12-0:i386 libpulse0:i386 libqt4-dbus:i386 libqt4-network:i386 \
+ libqt4-xml libqt4-xml:i386 libqtcore4 libqtcore4:i386 libqtdbus4 \
+ libqtdbus4:i386 libqtgui4:i386 libqtwebkit4:i386 libsamplerate0:i386 \
+ libschroedinger-1.0-0:i386 libselinux1:i386 libsm6:i386 libsndfile1:i386 \
+ libspeex1:i386 libspeexdsp1:i386 libsqlite3-0:i386 libssl1.0.0:i386 \
+ libstdc++6:i386 libtasn1-3:i386 libtheora0:i386 libtiff4:i386 libuuid1:i386 \
+ libva1:i386 libvorbis0a:i386 libvorbisenc2:i386 libvpx1:i386 libwrap0:i386 \
+ libx11-6:i386 libx11-xcb1:i386 libx264-123:i386 libxau6:i386 libxcb1:i386 \
+ libxdmcp6:i386 libxext6:i386 libxi6:i386 libxml2:i386 libxrender1:i386 \
+ libxss1:i386 libxt6:i386 libxtst6:i386 libxv1:i386 libxvidcore4:i386 qdbus\
+ ttf-dejavu-core uuid-runtime zlib1g:i386
+}
+
+install_prereq_ubuntu_14_skypopen()
+{
+#In addition to the packages required to build and run FreeSWITCH, we
+#need the following:
+
+ # Dependencies for building mod_skypopen:
+ apt-get install \
+ libx11-dev libx11-dev libxau-dev libxcb1-dev libxdmcp-dev \
+ x11proto-core-dev x11proto-input-dev x11proto-kb-dev xtrans-dev
+
+ # Infrastructure needed to run skype client:
+ apt-get install \
+ xvfb pulseaudio
+
+ # Dependencies of skype client:
+ apt-get install \
+ fontconfig fontconfig-config gcc-4.7-base:i386 libasound2:i386 \
+ libasound2-plugins:i386 libasyncns0:i386 libattr1:i386 libaudio2:i386 \
+ libavahi-client3:i386 libavahi-common-data:i386 libavahi-common3:i386 \
+ libavcodec53:i386 libavutil51:i386 libc6:i386 libc6-i686:i386 libcap2:i386 \
+ libcomerr2:i386 libcups2:i386 libdbus-1-3:i386 libdirac-encoder0:i386 \
+ libexpat1:i386 libffi5:i386 libflac8:i386 libfontconfig1 libfontconfig1:i386 \
+ libfreetype6:i386 libgcc1:i386 libgcrypt11:i386 libglib2.0-0:i386 \
+ libgnutls26:i386 libgpg-error0:i386 libgsm1:i386 libgssapi-krb5-2:i386 \
+ libgstreamer-plugins-base0.10-0:i386 libgstreamer0.10-0:i386 libice6:i386 \
+ libjack-jackd2-0:i386 libjbig0:i386 libjpeg8:i386 libjson0:i386 \
+ libk5crypto3:i386 libkeyutils1:i386 libkrb5-3:i386 libkrb5support0:i386 \
+ liblcms1:i386 liblzma5:i386 libmng1:i386 libmp3lame0:i386 libogg0:i386 \
+ libopenjpeg2:i386 liborc-0.4-0:i386 libp11-kit0:i386 libpcre3:i386 \
+ libpng12-0:i386 libpulse0:i386 libqt4-dbus:i386 libqt4-network:i386 \
+ libqt4-xml libqt4-xml:i386 libqtcore4 libqtcore4:i386 libqtdbus4 \
+ libqtdbus4:i386 libqtgui4:i386 libqtwebkit4:i386 libsamplerate0:i386 \
+ libschroedinger-1.0-0:i386 libselinux1:i386 libsm6:i386 libsndfile1:i386 \
+ libspeex1:i386 libspeexdsp1:i386 libsqlite3-0:i386 libssl1.0.0:i386 \
+ libstdc++6:i386 libtasn1-3:i386 libtheora0:i386 libtiff4:i386 libuuid1:i386 \
+ libva1:i386 libvorbis0a:i386 libvorbisenc2:i386 libvpx1:i386 libwrap0:i386 \
+ libx11-6:i386 libx11-xcb1:i386 libx264-123:i386 libxau6:i386 libxcb1:i386 \
+ libxdmcp6:i386 libxext6:i386 libxi6:i386 libxml2:i386 libxrender1:i386 \
+ libxss1:i386 libxt6:i386 libxtst6:i386 libxv1:i386 libxvidcore4:i386 qdbus \
+ ttf-dejavu-core uuid-runtime zlib1g:i386
+}
+
+install_prereq_centos_6_skypopen()
+{
+#In addition to the packages required to build and run FreeSWITCH, you will
+#need the following:
+
+ # Dependencies for building mod_skypopen:
+ yum install libx11-devel
+
+ # Infrastructure needed to run skype client:
+ yum install pulseaudio Xvfb xorg-x11-fonts* xz pulseaudio-utils
+
+ # Dependencies of skype client:
+ # Enable libraries repo
+ yum localinstall http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+ # Install libraries
+ yum install qt-x11.i686 qtwebkit.i686 glibc.i686  libgcc.i686 libstdc++.i686 libXv.i686 \
+ libX11.i686 libXext.i686 libXScrnSaver.i686 libcanberra-gtk2.i686 \
+ gtk2-engines.i686 PackageKit-gtk-module.i686
 }
 
 # Additional packages and specific details from :
@@ -271,6 +374,9 @@ EOF
 
 install_skype_client
 install_prereq_debian
+install_prereq_debian_7_skypopen
+install_prereq_ubuntu_14_skypopen
+install_prereq_centos_6_skypopen
 install_prereq_rpm
 enable_pulseaudio_disable_oss_disable_alsa
 enable_freeswitch_skypopen_skype_client_startup
