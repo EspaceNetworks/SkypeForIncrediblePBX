@@ -1,27 +1,39 @@
 #!/bin/bash
 #From: http://pbxinaflash.com/community/threads/skype-4-3-with-freeswitch-no-sound.15393/
 #    Instructions for Ubuntu server 10.04 32 bit with old skypopen installed.
+# CentOS added 4 Oct 2016 by ESPACE LLC.
+# From: https://wiki.centos.org/HowTos/Skype
+# Starting with Aug 4th 2014, no version of Skype older than 4.3 works due to the changes
+# that were implemented in the authentication mechanism. Any attempt to use older versions
+# lead to an error message similar to "Cannot contact server" ( the exact message varies 
+# depending on the version that was used ). 
 
 # Install the latest Skype client
 # NOTE: DYNAMIC client recommended therefore root access is necessary to install it and its required libraries.
-cd /tmp
-wget http://download.skype.com/linux/skype-4.3.0.37.tar.bz2
-tar xjvf /tmp/skype-4.3.0.37.tar.bz2 -C /usr/local
-rm /tmp/skype-4.3.0.37.tar.bz2
-ln -s /usr/local/skype-4.3.0.37 /usr/local/skype
-ln -s /usr/local/skype /usr/share/skype
-ln -s /usr/local/skype/skype /usr/local/bin/skype
+install_skype_client()
+{
+  cd /tmp
+  wget http://download.skype.com/linux/skype-4.3.0.37.tar.bz2
+  tar xjvf /tmp/skype-4.3.0.37.tar.bz2 -C /usr/local
+  rm /tmp/skype-4.3.0.37.tar.bz2
+  ln -s /usr/local/skype-4.3.0.37 /usr/local/skype
+  ln -s /usr/local/skype /usr/share/skype
+  ln -s /usr/local/skype/skype /usr/local/bin/skype
+}
 
-#    note: new Skype client need pulseaudio!
-apt-get install libx11-dev libx11-dev libxau-dev libxcb1-dev libxdmcp-dev x11proto-core-dev x11proto-input-dev x11proto-kb-dev xtrans-dev
-apt-get install libxss1 libqtcore4 libqt4-dbus libqtgui4
-apt-get install python-software-properties
-add-apt-repository ppa:kubuntu-ppa/backports
-apt-get update
-apt-get install libqt4-webkit
-apt-get install xvfb
-apt-get install libasound2 libasound2-plugins alsa alsa-utils alsa-oss alsa-tools
-apt-get install pulseaudio pulseaudio-utils
+install_prereq_debian()
+{
+  #    note: new Skype client need pulseaudio!
+  apt-get install libx11-dev libx11-dev libxau-dev libxcb1-dev libxdmcp-dev x11proto-core-dev x11proto-input-dev x11proto-kb-dev xtrans-dev
+  apt-get install libxss1 libqtcore4 libqt4-dbus libqtgui4
+  apt-get install python-software-properties
+  add-apt-repository ppa:kubuntu-ppa/backports
+  apt-get update
+  apt-get install libqt4-webkit
+  apt-get install xvfb
+  apt-get install libasound2 libasound2-plugins alsa alsa-utils alsa-oss alsa-tools
+  apt-get install pulseaudio pulseaudio-utils
+}
 
 # Additional packages and specific details from :
 # https://wiki.centos.org/HowTos/Skype
@@ -38,88 +50,94 @@ apt-get install pulseaudio pulseaudio-utils
 #8
 #Luis Ojeda, Aug 28, 2014 
 
-#From: https://wiki.centos.org/HowTos/Skype
-yum update
-yum groupinstall Desktop
+install_prereq_rpm()
+{
+  #From: https://wiki.centos.org/HowTos/Skype
+  yum update
+  yum groupinstall Desktop
 
-# FROM Giovanni Maruzzelli aricle on comp.telephony.freeswitch.user
-#http://permalink.gmane.org/gmane.comp.telephony.freeswitch.user/72343
-# CentOS 6.5 packages to be installed:
-# Dependencies for building mod_skypopen:
-yum install libX11-devel
-# Infrastructure needed to run skype client:
-yum install pulseaudio Xvfb xorg-x11-fonts* xz pulseaudio-utils
-# Dependencies of skype client:
-# Enable libraries repo
-yum localinstall http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-# Install libraries
-yum install qt-x11.i686 qtwebkit.i686 glibc.i686  libgcc.i686 libstdc++.i686 libXv.i686 \
- libX11.i686 libXext.i686 libXScrnSaver.i686 libcanberra-gtk2.i686 \
- gtk2-engines.i686 PackageKit-gtk-module.i686
+  # FROM Giovanni Maruzzelli aricle on comp.telephony.freeswitch.user
+  #http://permalink.gmane.org/gmane.comp.telephony.freeswitch.user/72343
+  # CentOS 6.5 packages to be installed:
+  # Dependencies for building mod_skypopen:
+  yum install libX11-devel
+  # Infrastructure needed to run skype client:
+  yum install pulseaudio Xvfb xorg-x11-fonts* xz pulseaudio-utils
+  # Dependencies of skype client:
+  # Enable libraries repo
+  yum localinstall http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  # Install libraries
+  yum install qt-x11.i686 qtwebkit.i686 glibc.i686  libgcc.i686 libstdc++.i686 libXv.i686 \
+    libX11.i686 libXext.i686 libXScrnSaver.i686 libcanberra-gtk2.i686 \
+    gtk2-engines.i686 PackageKit-gtk-module.i686
+ 
+  #From: https://wiki.centos.org/HowTos/Skype
+  yum install qtwebkit.i686 webkitgtk.i686
+  yum install alsa-lib.i686 libXv.i686 libXScrnSaver.i686 gtk2-engines.i686 \
+    PackageKit-gtk-module.i686 libcanberra.i686 libcanberra-gtk2.i686
+  yum install pulseaudio-libs.i686 alsa-plugins-pulseaudio.i686
+  yum install libv4l.i686
 
-#From: https://wiki.centos.org/HowTos/Skype
-yum update
-yum groupinstall Desktop
-yum install qtwebkit.i686 webkitgtk.i686
-yum install alsa-lib.i686 libXv.i686 libXScrnSaver.i686 gtk2-engines.i686 \
- PackageKit-gtk-module.i686 libcanberra.i686 libcanberra-gtk2.i686
-yum install pulseaudio-libs.i686 alsa-plugins-pulseaudio.i686
-yum install libv4l.i686
+  # For 64 bit CentOS, Then, to run Skype, load the 32-bit v4l1compat.so:
+  # [user@host]$ LD_PRELOAD=/usr/lib/libv4l/v4l1compat.so /opt/skype/skype
 
-# For 64 bit CentOS, Then, to run Skype, load the 32-bit v4l1compat.so:
-# [user@host]$ LD_PRELOAD=/usr/lib/libv4l/v4l1compat.so /opt/skype/skype
+  # 1.4. Adding skype.desktop to Desktops
+  #If you want to have skype.desktop to show up on users desktops, 
+  # you need to edit the file /usr/share/skype/skype.desktop and search for the line that says:
+  #Icon=skype.png
+  #and change it too
+  #Icon=/usr/share/skype/icons/SkypeBlue_48x48.png
+  #then copy the skype.desktop file into the user(s) Desktop with the command:
+  #[root@host]# cp -a /usr/share/skype/skype.desktop ~<username>/Desktop
+  #[root@host]# chown <username> ~<username>/Desktop/skype.desktop
 
-# 1.4. Adding skype.desktop to Desktops
-#If you want to have skype.desktop to show up on users desktops, you need to edit the file /usr/share/skype/skype.desktop and search for the line that says:
-#Icon=skype.png
-#and change it too
-#Icon=/usr/share/skype/icons/SkypeBlue_48x48.png
-#then copy the skype.desktop file into the user(s) Desktop with the command:
-#[root@host]# cp -a /usr/share/skype/skype.desktop ~<username>/Desktop
-#[root@host]# chown <username> ~<username>/Desktop/skype.desktop
+  #1.5. Running Skype
+  #You can run the skype program (as a normal user) from the command line with the command:
+  #[user@host]$ skype
+  #Also, if you installed the skype.desktop file above, you should be able to
+  # double click it from your desktop.
+}
 
-#1.5. Running Skype
-#You can run the skype program (as a normal user) from the command line with the command:
-#[user@host]$ skype
-#Also, if you installed the skype.desktop file above, you should be able to double click it from your desktop.
 
-# edit
-#    /lib/linux-sound-base/noALSA.nodprobe.conf
-#    and
-#    /lib/linux-sound-base/noOSS.nodprobe.conf
-#    and remove everything inside (empty files)
-cat <<EOF > /lib/linux-sound-base/noALSA.nodprobe.conf
+enable_pulseaudio_disable_oss_disable_alsa()
+{
+  # edit
+  #    /lib/linux-sound-base/noALSA.nodprobe.conf
+  #    and
+  #    /lib/linux-sound-base/noOSS.nodprobe.conf
+  #    and remove everything inside (empty files)
+  cat <<EOF > /lib/linux-sound-base/noALSA.nodprobe.conf
 
 EOF
-cat <<EOF > /lib/linux-sound-base/noOSS.nodprobe.conf
+  cat <<EOF > /lib/linux-sound-base/noOSS.nodprobe.conf
 
 EOF
 
-#    Pulseaudio configuration (Centos / Ubuntu)
-#    add root (or freeswitch) user to group pulseaudio and pulse-access
-groupadd pulseaudio
-groupadd pulse-access
-usermod -a -G pulseaudio freeswitch
-usermod -a -G pulse-access freeswitch
-usermod -a -G pulseaudio root
-usermod -a -G pulse-access root
+  #    Pulseaudio configuration (Centos / Ubuntu)
+  #    add root (or freeswitch) user to group pulseaudio and pulse-access
+  groupadd pulseaudio
+  groupadd pulse-access
+  usermod -a -G pulseaudio freeswitch
+  usermod -a -G pulse-access freeswitch
+  usermod -a -G pulseaudio root
+  usermod -a -G pulse-access root
 
-#    nano /etc/default/pulseaudio
-#    Change
-#    PULSEAUDIO_SYSTEM_START=0
-#    to
-#    PULSEAUDIO_SYSTEM_START=1
+  #    nano /etc/default/pulseaudio
+  #    Change
+  #    PULSEAUDIO_SYSTEM_START=0
+  #    to
+  #    PULSEAUDIO_SYSTEM_START=1
 
-#    nano /etc/pulse/system.pa
-#    remove everything and put
-cat <<EOF > /etc/pulse/system.pa
+  #    nano /etc/pulse/system.pa
+  #    remove everything and put
+  cat <<EOF > /etc/pulse/system.pa
 load-module module-null-sink
 load-module module-native-protocol-unix
 EOF
 
-#    nano /etc/pulse/daemon.conf
-#    at the end of the file add
-cat <<EOF >> /etc/pulse/daemon.conf
+  #    nano /etc/pulse/daemon.conf
+  #    at the end of the file add
+  cat <<EOF >> /etc/pulse/daemon.conf
 daemonize = yes
 system-instance = yes
 resample-method = trivial
@@ -130,13 +148,12 @@ default-fragment-size-msec = 20
 ; alternate-sample-rate = 44100
 EOF
 
-#    nano /etc/init.d/pulseaudio
+  #    nano /etc/init.d/pulseaudio
+  mv /etc/init.d/pulseaudio /root/pulseaudio.initscript.bak
 
-mv /etc/init.d/pulseaudio /root/pulseaudio.initscript.bak
-
-#    remove everything and put the following lines
-#    Code:
-cat <<EOF > /etc/init.d/pulseaudio
+  #    remove everything and put the following lines
+  #    Code:
+  cat <<EOF > /etc/init.d/pulseaudio
 #!/bin/sh -e
 ### BEGIN INIT INFO
 # Provides: pulseaudio esound
@@ -216,13 +233,14 @@ case "$1" in
  esac
  exit 0
 EOF
+}
 
-#    nano /usr/local/freeswitch/skypopen/skype-clients-startup-dir/start_skype_clients.sh
-
-#    check if you have the following lines
-
-#    Code:
-
+enable_freeswitch_skypopen_skype_client_startup()
+{
+  #    nano /usr/local/freeswitch/skypopen/skype-clients-startup-dir/start_skype_clients.sh
+  #    check if you have the following lines
+  #    Code:
+  cat <<EOF > /usr/local/freeswitch/skypopen/skype-clients-startup-dir/start_skype_clients.sh
 #!/bin/sh
 #Unload possible ALSA sound modules that would conflict with our OSS fake module
 rmmod snd_pcm_oss
@@ -245,7 +263,15 @@ sleep 3
 su root -c "/bin/echo 'SkypeUser SkypePass'| DISPLAY=:101  /usr/local/freeswitch/skypopen/skype-clients-symlinks-dir/skype101 --dbpath=/usr/local/freeswitch/skypopen/skype-clients-configuration-dir/skype101 --pipelogin &"
 sleep 7
 exit 0
-
+EOF
+}
 #    tested on two Asterisk 1.6.2.4 + FreePBX 2.8.1.5 + Freeswitch 1.2.10 PBXes
 ##10
 #pilovis, Sep 26, 2014 
+
+install_skype_client
+install_prereq_debian
+install_prereq_rpm
+enable_pulseaudio_disable_oss_disable_alsa
+enable_freeswitch_skypopen_skype_client_startup
+
